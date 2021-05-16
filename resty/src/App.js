@@ -1,6 +1,11 @@
 import React from 'react';
+import Axios from 'axios';
+import JSONPretty from 'react-json-prettify'
+import {atelierSulphurpoolLight} from 'react-json-prettify/dist/themes';
 
 import Header from './header/header.js';
+import Form from './form/form.js';
+import Results from './results/results.js';
 import Footer from './footer/footer.js';
 
 
@@ -9,9 +14,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      clicks: 0,
-      words: "Type Something...",
-      formValues: {}
+      showData: false,
+      formValues: {},
+      results: []
     };
   }
 
@@ -22,40 +27,28 @@ class App extends React.Component {
     this.setState( {formValues} );
   }
 
-  handleSubmit = (e) => {
+  fetchData = async (e) => {
     e.preventDefault();
-    this.setState( {...this.state, words: this.state.formValues.words} )
+    let input = this.state.formValues.url;
+    if(input) {
+      let url = input;
+      let response = await Axios.get(url);
+      let results = response;
+      this.setState( {...this.state, results, url: this.state.formValues.url, count: results.data.count, headers: results.headers, showData: !this.state.showData }  )
+    }
   }
 
   render() {
+    
     return (
       <>
         <Header />
-        <h2>{this.state.words}</h2>
-        <form onSubmit={this.handleSubmit}>
-          <div>
-            <input type="text" name="words" onChange={this.handleChangeInput} />
-          </div>
-          <div>
-            <label>
-              <input onChange={this.handleChangeInput} type="radio" name="button"  value="GET" />
-              <span>GET</span>
-            </label>
-            <label>
-              <input onChange={this.handleChangeInput} type="radio" name="button" value="POST" />
-              <span>POST</span>
-            </label>
-            <label>
-              <input onChange={this.handleChangeInput} type="radio" name="button" value="PUT" />
-              <span>PUT</span>
-            </label>
-            <label>
-              <input onChange={this.handleChangeInput} type="radio" name="button" value="DELETE" />
-              <span>DELETE</span>
-            </label>
-          </div>
-          <button>Submit</button>
-        </form>
+        <div>
+            <Form handleChangeInput={this.handleChangeInput}
+                  fetchData={this.fetchData} />
+            <Results visible={this.state.showData}
+                     results={this.state.results} />
+        </div>
         <Footer />
       </>
     );

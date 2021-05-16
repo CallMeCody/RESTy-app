@@ -1,34 +1,37 @@
 import React from 'react';
-import App from '../App.js';
 
-class Form extends React.Component
-{
-  render()
-  {
+import Axios from 'axios';
+
+class Form extends React.Component {
+
+  render() {
     return (
-      <form onChange={App.handleChangeInput}>
-        <div id="buttons">
-          <input type="text" name="input" />
+      <form onSubmit={this.props.fetchData}>
+        <div>
+          <input type="text" name="url" onChange={this.props.handleChangeInput} />
+        </div>
+        <div>
           <label>
-              <input onChange={App.handleChangeInput} type="radio" name="button" value="GET" />
-              <span>GET</span>
+            <input onChange={this.props.handleChangeInput} type="radio" name="button" value="GET" />
+            <span>GET</span>
           </label>
           <label>
-              <input onChange={App.handleChangeInput} type="radio" name="button" value="POST" />
-              <span>POST</span>
+            <input onChange={this.props.handleChangeInput} type="radio" name="button" value="POST" />
+            <span>POST</span>
           </label>
           <label>
-              <input onChange={App.handleChangeInput} type="radio" name="button" value="PUT" />
-              <span>PUT</span>
+            <input onChange={this.props.handleChangeInput} type="radio" name="button" value="PUT" />
+            <span>PUT</span>
           </label>
           <label>
-              <input onChange={App.handleChangeInput} type="radio" name="button" value="DELETE" />
-              <span>DELETE</span>
+            <input onChange={this.props.handleChangeInput} type="radio" name="button" value="DELETE" />
+            <span>DELETE</span>
           </label>
         </div>
+        <button onClick={this.props.fetchData}>Fetch</button>
       </form>
     );
-  };
-}
+  }
+};
 
 export default Form;
